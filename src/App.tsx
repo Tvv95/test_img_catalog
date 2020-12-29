@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Images from './Components/Images';
 import './App.sass';
-import { uniqueId, mergeWith, isArray } from 'lodash';
 
 function App() {
   const [tag, setTag] = useState<string>('');
@@ -92,31 +92,6 @@ function App() {
     }
   }, [tag])
 
-  const customizer = (objValue: any, srcValue: any) => {
-    if (isArray(objValue)) {
-      if (isArray(objValue[0])) {
-        return [...objValue, srcValue];
-      }
-      return [objValue, srcValue];
-    }
-  }
-
-  function renderImgs() {
-    if (isGrouped) {
-      const groupedData = {};
-      dataImg.map(current => mergeWith(groupedData, current, customizer));
-      return Object.entries(groupedData).map((current: any) => {
-        return (<div className='card' key={uniqueId()}><h5 className='card-title'>{current[0]}</h5>
-          {current[1].map((elem: any) => <div className='card insideCard' key={uniqueId()}><img className='card-img img-fluid' key={uniqueId()} src={elem} alt={current[0]} onClick={() => setTag(current[0])} /></div>)}</div>);
-      })
-    }
-    return dataImg.map((current) => Object.entries(current).map((elem) => {
-      return <div className='card mb-2' key={uniqueId()}>
-        {elem[1].map((cur: any) => <img className='card-img img-fluid' key={uniqueId()} src={cur} alt={elem[0]} onClick={() => setTag(elem[0])} />)}
-      </div>
-    }))
-  }
-
   return (
     <div className="App">
       <form className='justify-content-center align-items-center' onSubmit={handleSubmit}>
@@ -132,7 +107,7 @@ function App() {
       </form>
       <div className='container'>
         <div className='card-deck'>
-          {renderImgs()}
+          <Images dataImg={dataImg} isGrouped={isGrouped} setTag={setTag} />
         </div>
       </div>
     </div>
